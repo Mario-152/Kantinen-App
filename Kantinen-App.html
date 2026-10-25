@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kantine – Menü vorbestellen</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#24332b;background:#f3f6f1}
+*{box-sizing:border-box}body{margin:0}.hero{background:#1e5139;color:white;padding:32px 20px;text-align:center}.hero h1{margin:0 0 6px;font-size:30px}.hero p{margin:0;color:#d8eadf}
+main{max-width:760px;margin:28px auto;padding:0 16px 35px}.card{background:white;border:1px solid #e1e8e0;border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:0 3px 14px #193e2510}
+h2{font-size:19px;margin:0 0 17px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label.field{display:block;font-weight:600;font-size:14px}
+input[type=text],input[type=date],select{width:100%;margin-top:7px;padding:12px;border:1px solid #cbd7ce;border-radius:9px;font:inherit;background:white}
+.choice{display:flex;align-items:center;gap:12px;border:1px solid #e1e8e0;border-radius:10px;padding:14px;margin:9px 0;cursor:pointer}
+.choice:has(input:checked){border-color:#277d4f;background:#eef8f0}.choice input{accent-color:#23754b;width:18px;height:18px;flex-shrink:0}.choice span{flex:1}.choice strong{display:block}.choice small{color:#65756b}.price{font-weight:700;white-space:nowrap}
+.total{display:flex;justify-content:space-between;align-items:center;font-size:22px;font-weight:750;margin:14px 0 18px}button{width:100%;padding:15px;background:#21784b;color:white;border:0;border-radius:10px;font-size:17px;font-weight:700;cursor:pointer}button:hover{background:#165c38}button:disabled{opacity:.65;cursor:wait}
+.note{font-size:13px;color:#647369}.summary{border-top:1px solid #e1e8e0;padding-top:12px}.summary-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:14px}.summary-row span:last-child{white-space:nowrap}.summary-muted{color:#647369;font-size:13px;margin:9px 0}.hidden{display:none!important}#message{margin-top:16px;padding:14px;border-radius:9px;background:#e9f7ec;color:#175532}#message.error{background:#fff0ec;color:#9b3222}
+@media(max-width:540px){.grid{grid-template-columns:1fr}.card{padding:18px}.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="hero"><h1>🍽️ Kantine – Menüvorbestellung</h1><p>Wähle dein Mittagessen ganz einfach vorab aus.</p></header>
+<main><form id="orderForm">
+<section class="card"><h2>1. Persönliche Angaben</h2><div class="grid">
+<label class="field">Vorname *<input type="text" id="first" required maxlength="60" placeholder="Dein Vorname"></label>
+<label class="field">Nachname *<input type="text" id="last" required maxlength="60" placeholder="Dein Nachname"></label>
+</div></section>
+<section class="card"><h2>2. Hauptgericht auswählen *</h2>
+<label class="choice"><input type="radio" name="menu" value="Schnitzel mit Kartoffelsalat" data-price="8.90" required><span><strong>Menü 1 – Schnitzel mit Kartoffelsalat</strong><small>Knuspriges Schnitzel mit Kartoffelsalat</small></span><b class="price">8,90 €</b></label>
+<label class="choice"><input type="radio" name="menu" value="Spaghetti Bolognese" data-price="7.50"><span><strong>Menü 2 – Spaghetti Bolognese</strong><small>Pasta mit Tomaten-Hackfleischsauce</small></span><b class="price">7,50 €</b></label>
+<label class="choice"><input type="radio" name="menu" value="Gemüse-Curry mit Reis" data-price="7.90"><span><strong>Menü 3 – Gemüse-Curry mit Reis</strong><small>Vegetarisch</small></span><b class="price">7,90 €</b></label>
+</section>
+<section class="card"><h2>3. Zusätzliche Beilagen (optional)</h2>
+<label class="choice"><input type="checkbox" name="side" value="Pommes" data-price="2"><span>Portion Pommes</span><b class="price">+2,00 €</b></label>
+<label class="choice"><input type="checkbox" name="side" value="Gemüse" data-price="1.5"><span>Portion Gemüse</span><b class="price">+1,50 €</b></label>
+<label class="choice"><input type="checkbox" name="side" value="Gemischter Salat" data-price="2.5"><span>Kleiner gemischter Salat</span><b class="price">+2,50 €</b></label>
+</section>
+<section class="card"><h2>4. Möchtest du ein Getränk?</h2>
+<label class="choice"><input type="radio" name="wantsDrink" value="yes"><span>Ja</span></label>
+<label class="choice"><input type="radio" name="wantsDrink" value="no" checked><span>Nein</span></label>
+<div id="drinkSection" class="hidden"><label class="field">Getränk auswählen *<select id="drink"><option value="">Bitte auswählen</option><option value="Wasser" data-price="1.5">Wasser (+1,50 €)</option><option value="Cola" data-price="2">Cola (+2,00 €)</option><option value="Apfelschorle" data-price="2">Apfelschorle (+2,00 €)</option></select></label></div>
+</section>
+<section class="card"><h2>5. Abholung</h2><div class="grid">
+<label class="field">Abholdatum (Montag–Freitag) *<input type="date" id="date" required><small class="note">Montag–Freitag: laufende Woche. Am Wochenende: kommende Woche. Für heute nur bis 9:00 Uhr.</small></label>
+<label class="field">Abholzeit *<select id="time" required><option value="">Bitte auswählen</option><option>11:30</option><option>12:00</option><option>12:30</option><option>13:00</option></select></label>
+</div></section>
+<section class="card"><h2>6. Deine Bestellübersicht</h2><div id="summary" class="summary" aria-live="polite">Wähle zuerst ein Hauptgericht aus.</div><div class="total"><span>Gesamtpreis</span><span id="total">0,00 €</span></div>
+<p class="note" id="orderNotice" aria-live="polite"></p>
+<button type="submit" id="submitButton">Vorbestellung abschicken</button>
+<p class="note">Studienprojekt: Bitte für Testbestellungen nur erfundene Namen verwenden.</p>
+<div id="message" class="hidden" role="status" aria-live="polite"></div>
+</section></form></main>
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbympL0Fv7slvVA1RxJXv9fTnETAMLi6PEtGEV0MGt8xAuMNuUdvX2KKl061K1rNU0KP/exec';
+const form=document.getElementById('orderForm'),drinkSection=document.getElementById('drinkSection'),drink=document.getElementById('drink'),message=document.getElementById('message'),date=document.getElementById('date');
+const localDate=(d)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const today=()=>localDate(new Date());
+function isWeekend(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const day=new Date(value+"T12:00:00").getDay();return day===0||day===6}
+function earliestAllowedDate(){const now=new Date();if(now.getHours()>=9)now.setDate(now.getDate()+1);while(isWeekend(localDate(now)))now.setDate(now.getDate()+1);return localDate(now)}
+function endOfCurrentWeek(){const friday=new Date();const weekday=(friday.getDay()+6)%7;friday.setDate(friday.getDate()+4-weekday+(weekday>=5?7:0));return localDate(friday)}
+function setAllowedDate(){const earliest=earliestAllowedDate(),latest=endOfCurrentWeek();date.min=earliest;date.max=latest;if(!date.value||date.value<earliest||date.value>latest)date.value=earliest<=latest?earliest:'';document.getElementById('orderNotice').textContent='Montag bis Freitag: Bestellung für diese Woche. Samstag und Sonntag: Bestellung für nächste Woche. Für heute gilt Bestellschluss um 9:00 Uhr.';document.getElementById('submitButton').disabled=earliest>latest}
+function validatePickupDate(){let error='';if(!date.value)error='Bitte ein Abholdatum auswählen.';else if(isWeekend(date.value))error='Abholung ist nur Montag bis Freitag möglich.';else if(date.value>endOfCurrentWeek())error='Bestellungen sind nur für die freigegebene Woche möglich.';else if(date.value<earliestAllowedDate())error='Für heute ist der Bestellschluss um 9:00 Uhr. Bitte wähle einen späteren erlaubten Werktag.';date.setCustomValidity(error);return !error}
+setAllowedDate();
+const euro=n=>n.toLocaleString('de-DE',{style:'currency',currency:'EUR'});
+function update(){
+const yes=form.querySelector('[name=wantsDrink]:checked')?.value==='yes';
+drinkSection.classList.toggle('hidden',!yes);drink.required=yes;if(!yes)drink.value='';
+let sum=0;const rows=[];
+form.querySelectorAll('input[data-price]:checked').forEach(el=>{const price=Number(el.dataset.price);sum+=price;rows.push([el.value,price])});
+if(yes&&drink.selectedIndex>0){const price=Number(drink.selectedOptions[0].dataset.price);sum+=price;rows.push([drink.value,price])}
+document.getElementById('total').textContent=euro(sum);
+const summary=document.getElementById('summary');summary.replaceChildren();
+if(!rows.length){const hint=document.createElement('p');hint.className='summary-muted';hint.textContent='Wähle zuerst ein Hauptgericht aus.';summary.append(hint)}
+rows.forEach(([name,price])=>{const row=document.createElement('div');row.className='summary-row';const title=document.createElement('span');title.textContent=name;const value=document.createElement('span');value.textContent=euro(price);row.append(title,value);summary.append(row)});
+const pickup=document.createElement('p');pickup.className='summary-muted';pickup.textContent='Abholung: '+(date.value||'Datum auswählen')+' · '+(document.getElementById('time').value||'Uhrzeit auswählen');summary.append(pickup);
+message.classList.add('hidden');
+}
+form.addEventListener('change',update);
+form.addEventListener('input',()=>message.classList.add('hidden'));
+form.addEventListener('submit',async e=>{
+e.preventDefault();
+setAllowedDate();
+validatePickupDate();if(!date.reportValidity()||!form.reportValidity())return;
+const menu=form.querySelector('[name=menu]:checked');
+if(!menu)return;
+const first=document.getElementById('first').value.trim();
+const last=document.getElementById('last').value.trim();
+if(!first||!last){message.textContent='Bitte Vor- und Nachnamen eingeben.';message.className='error';return;}
+const menuIds={'Schnitzel mit Kartoffelsalat':'schnitzel','Spaghetti Bolognese':'spaghetti','Gemüse-Curry mit Reis':'curry'};
+const sideIds={'Pommes':'pommes','Gemüse':'gemuese','Gemischter Salat':'salat'};
+const drinkIds={'Wasser':'wasser','Cola':'cola','Apfelschorle':'apfelschorle'};
+const payload={vorname:first,nachname:last,gericht:menuIds[menu.value],beilagen:[...form.querySelectorAll('[name=side]:checked')].map(el=>sideIds[el.value]),getraenk:form.querySelector('[name=wantsDrink]:checked')?.value==='yes'?drinkIds[drink.value]:null,abholdatum:date.value,abholzeit:document.getElementById('time').value};
+const btn=document.getElementById('submitButton');
+btn.disabled=true;btn.textContent='Wird übermittelt …';message.className='hidden';
+try{
+// Apps Script unterstützt browserseitige Cross-Origin-Antworten nicht zuverlässig.
+// no-cors sendet die Anfrage, erlaubt aber keine Prüfung der Serverantwort.
+await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+message.className='';
+message.textContent='Deine Vorbestellung wurde abgeschickt. Vielen Dank!';
+}catch(error){message.className='error';message.textContent='Übermittlung fehlgeschlagen. Bitte Internetverbindung und Web-App-Bereitstellung prüfen.';}
+finally{btn.disabled=false;btn.textContent='Vorbestellung abschicken';}
+});
+date.addEventListener('input',()=>{validatePickupDate();if(date.value&&!date.validity.valid)date.reportValidity()});
+update();
+</script>
+</body></html>
